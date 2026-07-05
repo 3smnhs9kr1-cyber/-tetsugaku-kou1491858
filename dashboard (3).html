@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>哲学・認知・『チ。』 1画面集約ダッシュボード</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+            /* height: 100vh; */ /* Remove fixed height for scrolling */
+            overflow-y: auto; /* Allow vertical scrolling */
+            min-height: 100vh; /* Ensure it takes at least full viewport height */
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto 1fr 1fr; /* Adjust rows as needed if content grows */
+            gap: 12px;
+            /* height: 100%; */ /* Remove fixed height for scrolling */
+            max-width: 1600px;
+            margin: 0 auto;
+            padding-bottom: 20px; /* Add some space at the bottom */
+        }
+        header {
+            grid-column: span 3;
+            text-align: center;
+            padding: 5px 0;
+            background: linear-gradient(90deg, #1e293b, #334155, #1e293b);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            font-size: 24px; /* Increased for mobile */
+            margin: 0;
+            color: #38bdf8;
+            letter-spacing: 1px;
+        }
+        header p {
+            font-size: 14px; /* Increased for mobile */
+            margin: 2px 0 0 0;
+            color: #94a3b8;
+        }
+        .card {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 15px; /* Slightly increased padding */
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        .card-title {
+            font-size: 16px; /* Increased for mobile */
+            font-weight: bold;
+            color: #38bdf8;
+            border-left: 3px solid #38bdf8;
+            padding-left: 10px; /* Slightly increased padding */
+            margin-bottom: 10px; /* Slightly increased margin */
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .content {
+            font-size: 14px; /* Increased for mobile */
+            line-height: 1.6;
+            color: #cbd5e1;
+            flex-grow: 1;
+            overflow-y: auto; /* Allow internal scrolling if content is too large for the card */
+        }
+        ul {
+            margin: 6px 0; /* Adjusted margin */
+            padding-left: 20px; /* Adjusted padding */
+        }
+        li {
+            margin-bottom: 5px; /* Adjusted margin */
+        }
+        b {
+            color: #f1f5f9;
+        }
+        .badge {
+            background-color: #334155;
+            color: #38bdf8;
+            padding: 2px 6px; /* Slightly increased padding */
+            border-radius: 4px;
+            font-size: 12px; /* Increased for mobile */
+            font-weight: bold;
+            display: inline-block;
+            margin-right: 5px; /* Adjusted margin */
+        }
+        /* 図解パーツ */
+        .diagram-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0f172a;
+            border-radius: 6px;
+            padding: 10px; /* Slightly increased padding */
+            margin-top: 10px; /* Slightly increased margin */
+            border: 1px dashed #334155;
+        }
+        .circle-diagram {
+            width: 100px; /* Slightly increased size */
+            height: 100px; /* Slightly increased size */
+            border: 3px dashed #38bdf8;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            font-size: 12px; /* Increased for mobile */
+            font-weight: bold;
+        }
+        .circle-label {
+            position: absolute;
+            background: #1e293b;
+            padding: 3px 6px; /* Slightly increased padding */
+            border-radius: 4px;
+            border: 1px solid #334155;
+            font-size: 11px;
+        }
+        .label-top { top: -12px; color: #f43f5e; }
+        .label-bottom { bottom: -12px; color: #10b981; }
+        .label-center { color: #94a3b8; }
+
+        .vs-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            font-size: 12px; /* Increased for mobile */
+            text-align: center; /* Center align text in vs-boxes */
+        }
+        .vs-box {
+            width: 48%; /* Adjusted width to account for margin */
+            background: #1e293b;
+            padding: 8px; /* Slightly increased padding */
+            border-radius: 4px;
+            border: 1px solid #334155;
+            text-align: center;
+        }
+        .vs-center {
+            font-weight: bold;
+            color: #f43f5e;
+        }
+
+        .flow-chart {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            font-weight: bold;
+            font-size: 12px; /* Increased for mobile */
+        }
+        .flow-node {
+            background: #334155;
+            padding: 5px 10px; /* Slightly increased padding */
+            border-radius: 4px;
+            border: 1px solid #38bdf8;
+        }
+        .flow-arrow {
+            color: #38bdf8;
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr; /* Single column layout on small screens */
+                grid-template-rows: auto; /* Auto rows */
+            }
+            header h1 {
+                font-size: 22px;
+            }
+            .card-title {
+                font-size: 15px;
+            }
+            .content {
+                font-size: 13px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+
+    <header>
+        <h1>感情・認知哲学 × 『チ。』 1画面インフォグラフィック</h1>
+        <p>人間の心の構造、脳のスペック格差、そして可能性の開閉がもたらす変革の全貌</p>
+    </header>
+
+    <!-- 1行目・左：幸福の数直線（円環ウロボロス構造） -->
+    <div class="card">
+        <div class="card-title">① 幸福のウロボロス（円環）構造</div>
+        <div class="content">
+            幸福は単なる快不快の線形な連続体ではなく、両極端で<b>「自我が消滅」</b>することで繋がる特殊な円環構造として理解されます。<br>
+            これは、限界まで自分を追い詰めた先に、突如として世界との一体感が訪れるという逆説的な状態を示唆します。
+            <ul>
+                <li><b style="color:#f43f5e;">左端：感情の麻痺（アパシー）</b><br>絶望的な状況から心を保護するため、感情を遮断し、自己の存在や感覚を諦める状態です。これは「自己の死」とも表現されます。</li>
+                <li><b style="color:#10b981;">右端：フロー状態（没頭）</b><br>特定の活動に完全に集中し、時間や自己の意識すらも忘れて世界と一体化する状態です。ここでは「私は幸せか？」と自問する自我がなくなり、内的な檻からの解放を体験します。</li>
+                <li><b>中央：過剰な自我（日常）</b><br>多くの人は日常で、言葉や概念に囚われて「自分は幸せなのか」と常に自問し、無駄なエネルギーを消費（漏電）しています。</li>
+            </ul>
+            <div class="diagram-container">
+                <div class="circle-diagram">
+                    <span class="circle-label label-top">左端：麻痺(アパシー)<br>(自我の死)</span>
+                    <span class="circle-label label-bottom">右端：フロー(没頭)<br>(自己超越)</span>
+                    <span class="circle-label label-center">中央：日常の自我<br>(漏電)</span>
+                    ☯
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1行目・中央：人間の4つの世界認知タイプ -->
+    <div class="card">
+        <div class="card-title">② 世界認知の4タイプ</div>
+        <div class="content">
+            人間が世界をどのように認識し、反応するかは、「言葉による自我の形成度合い」と「脳のエネルギー状態」の複合的な要因で、主に以下の4つのタイプに分岐すると考えられます。
+            <ul>
+                <li><span class="badge">1</span><b>感覚直入（幼児型）</b>：まだ言葉のヨロイを十分に持たず、損得勘定抜きで生の痛みや金星の輝きのような世界からの情報に理屈抜きで感動し、震える感性を持つタイプです。</li>
+                <li><span class="badge">2</span><b>論理超越（超越者型）</b>：高度な論理や概念を駆使し、肉体的な苦痛や困難ですら「真理への探求」や「大義」のために意味を変換（脳内ハッキング）し、乗り越えることができるタイプです。</li>
+                <li><span class="badge">3</span><b>日常平穏（大衆型）</b>：社会が提供するルールや規範に適応し、過剰な疑問や深い哲学的な思考は抱かないことで、比較的穏やかな日常を送るタイプ。その代わり、狂気的なまでの信念も持ちません。</li>
+                <li><span class="badge">4</span><b>閉塞虚無（うつ状態型）</b>：脳のエネルギーが著しく枯渇し、前頭葉が機能低下することで、目の前の現実を「最悪な意味」としてしか解釈できない状態に陥っているタイプです。</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 1行目・右：『チ。』キャラクターの精神動態 -->
+    <div class="card">
+        <div class="card-title">③ 『チ。』 認知タイプの変遷</div>
+        <div class="content">
+            漫画『チ。—地球の運動について—』では、登場人物たちのドラマが、これらの認知タイプ間での「跳躍（進化）」と「転落（退行）」の対比として描かれています。
+            <div class="diagram-container" style="flex-direction:column; gap:8px;">
+                <div style="font-size:12px; width:100%; text-align:left; color:#e2e8f0;"><b>■ オクジーの奇跡的な大跳躍（思考の開放）</b><br>無知の弱者であった彼が、異物との衝突と好奇心を通じてタイプを劇的に変化させました。</div>
+                <div class="flow-chart">
+                    <div class="flow-node" style="border-color:#f43f5e;">④ 閉塞虚無</div>
+                    <div class="flow-arrow">➔</div>
+                    <div class="flow-node" style="border-color:#eab308;">① 感動(金星)</div>
+                    <div class="flow-arrow">➔</div>
+                    <div class="flow-node" style="border-color:#10b981;">② 論理超越</div>
+                </div>
+                <hr style="width:100%; margin: 4px 0;">
+                <div style="font-size:12px; width:100%; text-align:left; color:#e2e8f0;"><b>■ ノヴァクの盲信と転落（思考の閉鎖）</b><br>既存の枠組みに固執し、新しい可能性を拒絶した結果、世界が窒息しました。</div>
+                <div class="flow-chart" style="justify-content: space-around;">
+                    <div class="flow-node" style="border-color:#94a3b8;">③ 日常平穏（ルール盲信）</div>
+                    <div class="flow-arrow">➔</div>
+                    <div class="flow-node" style="border-color:#f43f5e;">④ 閉塞虚無（憎悪・絶望）</div>
+                </div>
+            </div>
+            <p style="font-size:12px; margin: 6px 0 0 0; color:#94a3b8;">※<b>ラファウ</b>：12歳という若さで③（社会適応）と②（論理超越）を完璧に制御する「数強」の脳を持つ天才。しかし、①（感覚直入）としての地動説の圧倒的真理に触れたことで、彼の脳は一度ショートし、新たな次元へと覚醒しました。</p>
+        </div>
+    </div>
+
+    <!-- 2行目・左：脳の物理的構造（うつ病とオーガズム） -->
+    <div class="card">
+        <div class="card-title">④ 脳の物理構造とバグ回避</div>
+        <div class="content">
+            うつ病（特に快感消失症状、アンヘドニア）の人がオーガズムで一時的に快感を得られるのは、快感をもたらす脳の神経回路が、うつ病で機能低下している領域とは物理的に異なる独立したシステムで制御されているためです。
+            <div class="diagram-container">
+                <div class="vs-container">
+                    <div class="vs-box">
+                        <b style="color:#f43f5e;">前頭前皮質（前頭葉）</b><br>
+                        高次な感情評価・思考<br>
+                        日常の喜びや意味付けを司る「司令塔」。<br>
+                        <span style="color:#f43f5e; font-weight:bold;">【うつ病で機能低下】</span>
+                    </div>
+                    <div class="vs-center">VS</div>
+                    <div class="vs-box">
+                        <b style="color:#10b981;">脳幹・腹側被蓋野</b><br>
+                        原始的快感・報酬系の中枢<br>
+                        知的な解釈を必要とせず、ドーパミンやエンドルフィンを放出する「強制点火装置」。<br>
+                        <span style="color:#10b981; font-weight:bold;">【強制点火・ジャック】</span>
+                    </div>
+                </div>
+            </div>
+            <p style="font-size:12px; margin:6px 0 0 0; color:#94a3b8;">絶頂の瞬間、不安や自己批判、ネガティブな反芻思考を司る<b>「悩む自己（前頭葉）」の活動が物理的にシャットダウン</b>されます。この一時的な思考停止が、幸福の数直線における「右端への強制ワープ」を引き起こし、束の間の解放感を与えます。</p>
+        </div>
+    </div>
+
+    <!-- 2行目・中央：脳の内的スペック（IQ・数強・中学受験） -->
+    <div class="card">
+        <div class="card-title">⑤ 脳の内的スペック格差</div>
+        <div class="content">
+            一つの事柄を深く思考し、複数の要素を同時に考慮に入れる「コントロール力」は、単なる根性論ではなく、個人の脳が持つ基本的なスペック（地頭）の差に大きく依存します。
+            <ul>
+                <li><b>ワーキングメモリ（RAM容量）</b>：思考における短期的な作業台のようなもので、複数の情報を一時的に保持し、処理する能力です。容量が大きい人（高IQの人など）は、複雑な条件や情報を混乱せずにホールドし続けることができます。</li>
+                <li><b>メタ認知能力</b>：自分の思考プロセスや感情状態を客観的に認識し、監視、制御する能力です。「今、自分は何を考えているか」「この考えは正しいか」といった思考の上位に立つ思考です。</li>
+                <li><b>【中学受験のインパクト】</b>：過酷な学習量と多重処理を要求される中学受験の経験は、特に10歳〜12歳という脳の発達期において、前頭葉のワーキングメモリとメタ認知能力を<b>強制的にインストール</b>し、急成長させる効果があると言われています。</li>
+                <li><b>【「数強」の脳の秘密】</b>：数学に強い人々の脳は、数式や概念を極限まで小さく<b>「超圧縮（チャンキング）」</b>して記憶する能力に長けています。これにより、彼らの思考作業台（ワーキングメモリ）は常にガラ空きの状態となり、複雑な並列処理や新たな思考をスムーズに行うことが可能になります。</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 2行目・右：脳スペック不足を突破する「外部化の罠」 -->
+    <div class="card">
+        <div class="card-title">⑥ 投げ出しをゼロにする「外部化の罠」</div>
+        <div class="content">
+            脳のスペックが不足している一般的な人々が、「あらゆる可能性」を考え抜き、途中で投げ出さないようにするための戦略が「脳の外部化（インフラの設計）」です。これは、脳の弱点を理解し、それに寄り添うように設計された「罠」を仕掛けることで、思考を継続させる手法です。
+            <ul>
+                <li><span class="badge">1</span><b>初期摩擦をゼロにする</b><br>思考を始める前の物理的な障壁や事務作業を徹底的に排除します。例えば、前日の夜にノートを開いて問いの最初の1行を書いておくことで、脳に「今日は考えなくていい言い訳」を思いつかせる隙を与えません。</li>
+                <li><span class="badge">2</span><b>不快のタイムリミット設定</b><br>脳が飽きたり嫌がったりする前に、短期的な報酬を設定します。「たった1分だけ考えたらYouTubeを見てもいい」といったルールを設けることで、脳の報酬系をハックし、思考への抵抗を減らします。</li>
+                <li><span class="badge">3</span><b>受動の思考へ丸投げ</b><br>能動的に思考する負荷を軽減するために、他人やAIに質問してもらう形式を取ります。これにより、外部からの問いかけに応答する形で思考を進め、自分から積極的に考え出すエネルギー消費を抑えます。</li>
+            </ul>
+            <p style="font-size:12px; margin: 6px 0 0 0; color:#94a3b8;">これらの「外部化の罠」は、意思の力に頼るのではなく、環境と思考のプロセスをデザインすることで、誰でも「考え抜く力」を発揮できるようにするための現実的なアプローチです。</p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
