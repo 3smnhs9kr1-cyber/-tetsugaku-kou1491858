@@ -1,1 +1,1 @@
-- [4タイプの人間×『チ。』](dashboard (3).html)
+- [4タイプの人間×『チ。』](https://github.com/3smnhs9kr1-cyber/-tetsugaku-kou1491858/blob/main/dashboard%20(3).html)
